@@ -1,0 +1,2 @@
+# Documentation tools are separate from the scientific runtime dependencies.
+Sphinx==8.2.3

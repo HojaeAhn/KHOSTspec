@@ -1,0 +1,12 @@
+# Direct dependency versions used in the recorded validation environment.
+numpy==2.5.4
+scipy==1.18.1
+matplotlib==3.11.2
+pandas==3.1.0
+astropy==8.0.2
+ccdproc==2.5.1
+specutils==2.4.0
+scikit-learn==1.9.1
+numba==0.68.1
+PyYAML==6.0.3
+threadpoolctl==3.7.0

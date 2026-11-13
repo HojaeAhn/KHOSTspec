@@ -1,0 +1,71 @@
+body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    color: #24313e;
+}
+
+div.body {
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+div.body h1, div.body h2, div.body h3 {
+    font-family: inherit;
+    color: #123b50;
+    line-height: 1.25;
+}
+
+div.body h1 {
+    font-size: 2rem;
+    border-bottom: 2px solid #dbe7ed;
+    padding-bottom: 0.6rem;
+}
+
+a, div.sphinxsidebar a {
+    color: #086878;
+}
+
+div.sphinxsidebar {
+    font-family: inherit;
+    font-size: 14px;
+}
+
+div.sphinxsidebar h3, div.sphinxsidebar h4 {
+    font-family: inherit;
+}
+
+div.body table.docutils {
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+}
+
+div.body table.docutils td, div.body table.docutils th {
+    border-color: #dbe3e8;
+    padding: 0.5rem 0.65rem;
+}
+
+div.body table.docutils th {
+    background: #edf4f7;
+}
+
+div.body pre {
+    background: #f3f6f8;
+    border: 1px solid #dbe3e8;
+    border-radius: 5px;
+    padding: 0.9rem;
+    line-height: 1.5;
+}
+
+code, pre, .sig {
+    font-family: Consolas, "Liberation Mono", monospace;
+}
+
+dl.py > dt.sig {
+    background: #edf4f7;
+    border-left: 3px solid #086878;
+    padding: 0.6rem;
+    overflow-wrap: anywhere;
+}
+
+div.admonition {
+    border-radius: 5px;
+}

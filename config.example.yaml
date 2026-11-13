@@ -1,0 +1,58 @@
+# Paths are relative to the current working directory.
+workpath: "working"
+darkpath: "darklibrary"
+savepath: "processed"
+refpath: "stdspeclibrary"
+memory_limit: 32  # Decimal GB used to budget concurrent workers.
+
+# Observatory geodetic coordinates; set these for the observing site.
+longitude: 127.08225  # Degrees, positive east.
+latitude: 37.239083  # Degrees, positive north.
+elevation: 119  # Metres above the reference ellipsoid.
+
+# Example QSI detector settings; verify against the observation headers.
+CCD:
+    gain: 0.454  # Electrons per ADU.
+    rdnoise: 9.4  # Read noise in electrons.
+    datay_start: 600  # First detector row to retain, inclusive.
+    datay_end: 1800  # Last detector row boundary, exclusive.
+
+Trace:
+    naper: 1  # The operating pipeline uses one aperture.
+    dW: 10  # Dispersion median-slice half-width; tracing steps by 2*dW pixels.
+    dH: 9  # Spatial search-box half-width in pixels.
+    fwhm: 15  # Spatial peak-detection filter width in pixels; legacy option name.
+    threshold: 100  # Traced peak excess above the local median.
+    order: 5  # Chebyshev polynomial degree.
+    plotyn: 1  # Write diagnostic plots.
+
+Extract:
+    method: ac
+    ac_training_bin: 64  # Training columns per independent fold.
+    crreject: 10  # Positive cosmic-ray rejection threshold in sigma.
+    raper: 20  # Aperture half-width in detector pixels.
+    bgin: 50  # Inner background-sideband radius in pixels.
+    bgout: 80  # Outer background-sideband radius in pixels.
+    niter: 4  # Maximum positive pixel rejections per column; zero disables them.
+    nk: 4  # Number of profile basis components.
+    xbin: 64  # Initial profile training bin in dispersion pixels.
+    xsmooth: 20  # Profile smoothing scale in dispersion pixels.
+    profile_floor: 1e-5  # Positive floor for profile weights.
+
+Wavecal:
+    refpath: "NeAr.csv"
+    order: 5  # Wavelength polynomial degree.
+    lindisp: 0.89  # Initial dispersion estimate in Angstrom per pixel.
+    window: 15  # Gaussian peak-fitting half-window in pixels.
+    wmin: 0.1  # Minimum Gaussian sigma in pixels.
+    wmax: 7  # Maximum Gaussian sigma in pixels.
+    prominence: 5000  # Arc peak prominence threshold.
+    plotyn: 1
+
+Resgen:
+    mc_samples: 256  # Shared draws for extraction and response uncertainties.
+    relflux_norm_window: [5400.0, 5600.0]  # Science-grid wavelengths in Angstrom.
+    relflux_norm_min_coverage: 0.9  # Minimum supported fraction of this interval.
+    relflux_norm_min_bins: 20  # Required valid bins within the interval.
+    order: 54  # Number of intervals for response fitting.
+    plotyn: 1

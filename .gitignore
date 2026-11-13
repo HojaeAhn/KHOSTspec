@@ -1,0 +1,35 @@
+# Publish only the maintained source, example configuration, and portable tests.
+/*
+!/.gitignore
+!/README.md
+!/requirements.txt
+!/requirements-dev.txt
+!/requirements-docs.txt
+!/spec_reduction_parallel.py
+!/speclibparallel.py
+!/config.example.yaml
+!/NeAr.csv
+!/tests/
+/tests/*
+!/tests/test_entrypoint.py
+!/docs/
+/docs/*
+!/docs/*.rst
+!/docs/conf.py
+!/docs/build.py
+!/docs/api/
+/docs/api/*
+!/docs/api/*.rst
+!/docs/_static/
+/docs/_static/*
+!/docs/_static/custom.css
+!/.github/
+/.github/*
+!/.github/workflows/
+/.github/workflows/*
+!/.github/workflows/documentation.yml
+!/tools/
+/tools/*
+!/tools/publish_github.ps1
+
+# Existing tracked files and Git history are not affected by ignore rules.
