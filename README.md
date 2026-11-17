@@ -2,12 +2,8 @@
 
 A file-level parallel pipeline for optical spectra taken at KHAO. Starting from
 raw FITS frames, it produces extracted spectra, wavelength-calibrated spectra,
-and response-corrected **relative-flux spectra with statistical uncertainties**.
+and response-corrected relative-flux spectra.
 
-The default A+C extraction combines a positive spatial profile with an
-independently trained signed anchor. Horne fits and their finite-iteration
-derivatives run in blocks of up to 512 wavelength columns, with separate
-convergence and cosmic-ray rejection states for every column.
 
 ## Repository contents
 
@@ -15,7 +11,7 @@ convergence and cosmic-ray rejection states for every column.
 | --- | --- |
 | [spec_reduction_parallel.py](spec_reduction_parallel.py) | Command-line entry point and compatible worker aliases |
 | [speclibparallel.py](speclibparallel.py) | Calibration, tracing, extraction, wavelength and response processing, and run controller |
-| [config.example.yaml](config.example.yaml) | Portable example configuration based on a QSI detector setup |
+| [config.example.yaml](config.example.yaml) | Portable example configuration |
 | [NeAr.csv](NeAr.csv) | Reference arc wavelengths in Angstrom |
 | [requirements.txt](requirements.txt) | Direct dependency versions used for validation |
 | [requirements-dev.txt](requirements-dev.txt) | Additional dependency for the bundled tests |
@@ -70,9 +66,8 @@ particularly on Windows.
 
 ### Observation directory and FITS headers
 
-Place bias frames and any same-night dark frames at the top level of the
-observation directory. Science, reference-star, and arc frames are also found
-in subdirectories. Group discovery recognizes `.fit`, `.fits`, and `.fts`.
+Place all frames at the top level of the observation directory.
+Group discovery recognizes `.fit`, `.fits`, and `.fts`.
 Bias frames are required; dark correction can use a compatible library master
 when no suitable same-night master is available.
 
@@ -115,8 +110,9 @@ Templates must be supplied at:
 The `REFERENCES` entry provides `<library>` and `<template_file>` without the
 `.fits` suffix. Supported libraries are:
 
-- **Pickles / CALSPEC:** FITS binary tables with `WAVELENGTH` and `FLUX` columns.
-- **MILES:** one-dimensional FITS images with wavelength coordinates in the header.
+- **Pickles:** FITS binary tables with `WAVELENGTH` and `FLUX` columns. (https://www.stsci.edu/hst/instrumentation/reference-data-for-calibration-and-tools/astronomical-catalogs/pickles-atlas)
+- **MILES:** one-dimensional FITS images with wavelength coordinates in the header. (https://research.iac.es/proyecto/miles/pages/stellar-libraries/miles-library.php)
+- **CALSPEC:** FITS binary tables with `WAVELENGTH` and `FLUX` columns. (https://www.stsci.edu/hst/instrumentation/reference-data-for-calibration-and-tools/astronomical-catalogs/calspec)
 
 Set the template wavelength convention and resolution from the template's
 documented metadata. `Templates.libraries.<library>` can provide
