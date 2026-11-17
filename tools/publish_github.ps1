@@ -5,9 +5,10 @@ Publish a clean source export as a new public KHOSTspec repository.
 .DESCRIPTION
 Run this script from the reviewed source-only export after signing in with
 GitHub CLI. It creates the personal-account repository, uploads its initial
-develop branch, enables GitHub Pages, permits develop deployments, and starts
-the documentation workflow. It refuses an existing repository or local .git
-entry. It does not reuse the original working repository's history.
+main branch, creates develop for future work, and enables GitHub Pages with
+main as the permitted deployment branch. The main push triggers the
+documentation workflow. It refuses an existing repository or local .git entry.
+It does not reuse the original working repository's history.
 
 GitHub tokens are handled by GitHub CLI and are never requested or printed.
 The initial commit uses the account's GitHub noreply address. Git identity and
@@ -99,7 +100,8 @@ function Test-PublicSourcePath {
 
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $repositoryName = 'KHOSTspec'
-$branchName = 'develop'
+$branchName = 'main'
+$developmentBranchName = 'develop'
 $previousGhHost = [Environment]::GetEnvironmentVariable('GH_HOST', 'Process')
 $localRepositoryCreated = $false
 $remoteRepositoryCreated = $false
@@ -207,12 +209,19 @@ try {
     $null = Invoke-CheckedCommand -Executable $gitExecutable -ArgumentList (
         $gitArguments + @('-c', 'credential.helper=', '-c', 'credential.helper=!gh auth git-credential',
             'push', '--set-upstream', 'origin', $branchName)
-    ) -Step 'Push the initial develop branch'
+    ) -Step 'Push the initial main branch'
     $null = Invoke-CheckedCommand -Executable $ghExecutable -ArgumentList @(
         'repo', 'edit', $repository, '--default-branch', $branchName
-    ) -Step 'Set develop as the default branch'
+    ) -Step 'Set main as the default branch'
+    $null = Invoke-CheckedCommand -Executable $gitExecutable -ArgumentList (
+        $gitArguments + @('branch', $developmentBranchName, 'HEAD')
+    ) -Step 'Create develop for future development'
+    $null = Invoke-CheckedCommand -Executable $gitExecutable -ArgumentList (
+        $gitArguments + @('-c', 'credential.helper=', '-c', 'credential.helper=!gh auth git-credential',
+            'push', '--set-upstream', 'origin', $developmentBranchName)
+    ) -Step 'Push the initial develop branch without publishing documentation'
 
-    Write-Host 'Enabling GitHub Pages and the develop deployment environment.'
+    Write-Host 'Enabling GitHub Pages and the main deployment environment.'
     $pagesEndpoint = "$repositoryEndpoint/pages"
     $pagesStatus = Get-ApiHttpStatus -GhExecutable $ghExecutable -Endpoint $pagesEndpoint -Headers $apiHeaders
     if ($pagesStatus -eq 404) {
@@ -247,16 +256,14 @@ try {
         $null = Invoke-CheckedCommand -Executable $ghExecutable -ArgumentList (
             @('api', '--hostname', 'github.com', '--method', 'POST') + $apiHeaders +
             @($policiesEndpoint, '-f', "name=$branchName", '-f', 'type=branch', '--silent')
-        ) -Step 'Allow develop deployments to GitHub Pages'
+        ) -Step 'Allow main deployments to GitHub Pages'
     }
-    $null = Invoke-CheckedCommand -Executable $ghExecutable -ArgumentList @(
-        'workflow', 'run', 'documentation.yml', '--repo', $repository, '--ref', $branchName
-    ) -Step 'Start the documentation build and Pages deployment'
 
     Write-Host "Repository: https://github.com/$repository"
     Write-Host "Actions: https://github.com/$repository/actions/workflows/documentation.yml"
     Write-Host "Pages: https://$owner.github.io/$repositoryName/"
-    Write-Host 'The documentation workflow has started. Check Actions for the deployment result.'
+    Write-Host 'The initial main push triggers the documentation workflow. Check Actions for the deployment result.'
+    Write-Host 'If deployment ran before Pages was enabled, rerun the failed jobs from Actions after this setup finishes.'
 }
 catch {
     Write-Error -Message $_.Exception.Message -ErrorAction Continue

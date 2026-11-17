@@ -75,20 +75,28 @@ GitHub Actions and Pages
 ------------------------
 
 The maintained workflow is ``.github/workflows/documentation.yml``. A push to
-``develop`` runs the portable tests and a strict Sphinx build, then publishes
-the resulting HTML to GitHub Pages. Pull requests targeting ``develop`` run
-the same tests and build but do not deploy. A manual run on ``develop`` also
-supports redeployment without changing source files.
+``main`` runs the portable tests and a strict Sphinx build, then publishes
+the resulting HTML to GitHub Pages. Pull requests targeting ``main`` run
+the same tests and build but do not deploy. Merging a pull request into
+``main`` creates a push event and updates the published site.
+
+Use ``develop`` for ongoing work and open a pull request into ``main`` when
+the changes are ready for publication. A push to ``develop`` does not run this
+workflow. There is no manual deployment trigger; an existing failed run can
+still be retried after its underlying problem is resolved. A local ``git pull``
+downloads commits and does not produce a GitHub workflow event.
 
 Initial repository setup requires the following:
 
 1. Create a public personal repository named ``KHOSTspec`` and push the reviewed
-   source-only export to ``develop``. Set ``develop`` as the default branch.
+   source-only export to ``main``. Set ``main`` as the default branch and
+   create ``develop`` for ongoing development.
 2. In ``Settings > Pages``, set the publishing source to ``GitHub Actions``.
 3. In ``Settings > Environments > github-pages``, ensure that deployment rules
-   permit ``develop``. Rules allowing only ``main`` will block this workflow.
-4. Run ``Sphinx documentation`` from the Actions tab on ``develop`` if a fresh
-   deployment is needed after changing the Pages settings.
+   permit only ``main``. Remove an older rule permitting ``develop``.
+4. The initial ``main`` push starts ``Sphinx documentation``. If Pages was not
+   enabled before that run reached deployment, finish the settings and retry
+   its failed jobs from the Actions tab.
 
 The optional ``tools/publish_github.ps1`` helper performs these setup steps for
 a new repository after a local GitHub CLI login. It is intended for a clean

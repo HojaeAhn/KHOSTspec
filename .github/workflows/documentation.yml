@@ -2,10 +2,9 @@ name: Sphinx documentation
 
 "on":
   push:
-    branches: [develop]
+    branches: [main]
   pull_request:
-    branches: [develop]
-  workflow_dispatch:
+    branches: [main]
 
 permissions:
   contents: read
@@ -54,7 +53,7 @@ jobs:
         run: python docs/build.py
 
       - name: Upload the publishable HTML
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v4
         with:
           path: docs/_build/html
@@ -62,7 +61,7 @@ jobs:
   deploy:
     name: Publish GitHub Pages
     needs: build
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

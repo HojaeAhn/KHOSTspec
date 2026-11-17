@@ -330,21 +330,25 @@ separate `docs/_build/doctrees/` cache.
 ### GitHub Pages
 
 [The documentation workflow](.github/workflows/documentation.yml) runs on
-pushes to `develop`, pull requests targeting `develop`, and manual dispatch.
+pushes to `main` and pull requests targeting `main`.
 It installs the real scientific dependencies, runs the portable tests, and
-builds Sphinx with warnings treated as errors. Successful builds from `develop`
-pushes or manual runs on `develop` are published to GitHub Pages. Pull requests
-are checked without publishing their content.
+builds Sphinx with warnings treated as errors. Only successful builds from
+`main` pushes publish to GitHub Pages. Merging a pull request into `main`
+creates such a push and updates the site. Pull requests are checked without
+publishing their content; pushes to `develop` do not run this workflow.
+There is no manual deployment trigger. A local `git pull` downloads commits
+and does not trigger a server-side build or deployment.
 
-For the initial repository setup, use `develop` as the default branch, select
+For the initial repository setup, use `main` as the default branch, select
 **Settings > Pages > Build and deployment > Source: GitHub Actions**, and
-ensure the `github-pages` environment permits deployments from `develop`.
+ensure the `github-pages` environment permits deployments only from `main`.
 No personal access token is needed by the workflow; GitHub supplies its
 job-scoped deployment token.
 
 For a new personal public repository, the optional
 [PowerShell publishing helper](tools/publish_github.ps1) creates `KHOSTspec`
-from a clean source export, pushes `develop`, and configures Pages. Install
+from a clean source export, pushes `main`, creates a `develop` branch for
+ongoing work, and configures Pages. Install
 GitHub CLI and run
 `gh auth login --web --hostname github.com --git-protocol https --scopes repo,workflow`
 first. The helper refuses an existing local Git repository or an existing
